@@ -37,18 +37,18 @@ public class ParquetFileParser {
 		FileSystem hdfs = path.getFileSystem(conf);
 		
 		if (!hdfs.exists(path)) {
-			System.out.println("Folder [" + hdfsFolder + "] doesn't exist");
+			ConsolePrinter.printError("Folder [" + hdfsFolder + "] doesn't exist");
 			return false;
 		}
 		
 		if (!hdfs.isDirectory(path)) {
-			System.out.println("[" + hdfsFolder + "] is not a folder!");
+			ConsolePrinter.printError("[" + hdfsFolder + "] is not a folder!");
 			return false;
 		}
 		
 		FileStatus[] stats = hdfs.listStatus(path);
 		if (stats.length == 0) {
-			System.out.println("There is no files under folder [" + hdfsFolder + "]");
+			ConsolePrinter.printError("There is no files under folder [" + hdfsFolder + "]");
 			return false;
 		}
 		
@@ -59,7 +59,6 @@ public class ParquetFileParser {
 		
 		
 		for (ColumnChunkMetaData c : meta.getBlocks().get(0).getColumns()) {
-			System.out.println("column: " + c.getPath().toString() +  " type: " + c.getType().toString());
 			String[] t = new String[2];
 			String columnName = c.getPath().toString();
 			t[0] = columnName.substring(1, columnName.length() -1) ;

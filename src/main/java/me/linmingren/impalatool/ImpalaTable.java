@@ -53,6 +53,8 @@ public class ImpalaTable {
 
 		createTableSql = createTableSql.replace("{database}", database);
 		
+		
+		
 		Process p = new ProcessBuilder("impala-shell", "-q", createTableSql).start();
 
 		InputStream es = p.getErrorStream();
@@ -60,9 +62,18 @@ public class ImpalaTable {
 		BufferedReader er = new BufferedReader(esr);
 
 		String line;
-
+        boolean result = true;
 		while ((line = er.readLine()) != null) {
 			System.out.println(line);
+			if (line.contains("ERROR")) {
+				result = false;
+			}
+		}
+		
+		if (result) {
+			ConsolePrinter.printInfo("Successed to generate table [" + tableName +"] for HDFS folder [" + storeLocation + "]");
+		} else {
+			ConsolePrinter.printError("Failed to generate table [" + tableName +"] for HDFS folder [" + storeLocation + "]");
 		}
 	}
 }
